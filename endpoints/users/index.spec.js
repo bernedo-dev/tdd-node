@@ -45,5 +45,50 @@ describe('Endpoints', () => {
                 ])
             });  
         });
+
+        describe('put', () => {
+            it('updates a resource', async () => {
+                const req = {
+                    params: { id: 19 },
+                    body: 'request body'
+                };
+                const axios = {
+                    put: jest.fn().mockResolvedValue({ data: 1})
+                };
+                const res = {
+                    sendStatus: jest.fn()
+                };
+                await handlers({ axios }).put(req,res);
+                expect(axios.put.mock.calls).toEqual([
+                    [`https://jsonplaceholder.typicode.com/users/19`,'request body']
+                ]);
+                expect(res.sendStatus.mock.calls).toEqual([
+                    [204]
+                ]);
+            
+
+            });
+        });
+
+        describe('delete', () => {
+            it('delete a resource', async () => {
+                const req = {
+                    params: { id: 19 },
+                };
+                const axios = {
+                    delete: jest.fn()
+                };
+                const res = {
+                    sendStatus: jest.fn()
+                };
+                await handlers({ axios }).delete(req,res);
+                expect(axios.delete.mock.calls).toEqual([
+                    ['https://jsonplaceholder.typicode.com/users/19']
+                ]);
+                expect(res.sendStatus.mock.calls).toEqual([
+                    [204]
+                ]);
+            });
+        });
     });
 });

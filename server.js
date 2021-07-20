@@ -1,6 +1,7 @@
 const express = require('express');
-const axios = require('axios');
-const { users } = require('./endpoints');
+const { authenticate } = require('./middlewares');
+const { posts } = require('./endpoints');
+const services = require('./services');
 const app = express();
 const port = 3000;
 
@@ -11,13 +12,13 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-const usersHandlers = users({ axios });
+const postsHandlers = posts({ services });
 
-app.get('/', usersHandlers.get );
-app.post('/', usersHandlers.post);
-app.put('/:id', usersHandlers.put);
-app.delete('/:id', usersHandlers.delete);
+app.post('/', authenticate, postsHandlers.post);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
-})
+});
+
+
+module.exports = app;
